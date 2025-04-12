@@ -1,6 +1,6 @@
 # My Changes
 
-In my version of the spotify ipod. I added a few things such as the ability to shut the device off from the menu's. A headphone jack that most devices miss, haptic feedback, wireless charging, usb-c charging. and a bigger battery.
+In my version of the spotify ipod. I added a few things such as the ability to shut the device off from the menu's. A headphone jack that most devices miss, haptic feedback, wireless charging, usb-c charging. and a bigger battery, a waveshare 2.4inch screen that doesn't use composite video. as i used the "pi zero 2 w" which didn't have a composite output. The documentation below does not reflect my set up and is mainly brought over from the original forked repository.
 
 An issue I encountered was that the clickwheel code uses the pi's PWM to generate a square wave signal to send to the motor to create it's haptic feel. This however is not something that can be manipulated when using the PWM function to output sound to a headphone jack. So I had changed the code to create a momentary runtime per each clickwheel sensed movement. This worked exceptionally well.
 
