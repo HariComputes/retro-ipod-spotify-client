@@ -1,5 +1,6 @@
 import spotify_manager
 import re as re
+import os
 from functools import lru_cache 
 
 MENU_PAGE_SIZE = 6
@@ -15,6 +16,7 @@ LINE_HIGHLIGHT = 1
 LINE_TITLE = 2
 
 spotify_manager.refresh_devices()
+spotify_manager.refresh_data()
 
 class LineItem():
     def __init__(self, title = "", line_type = LINE_NORMAL, show_arrow = False):
@@ -324,6 +326,76 @@ class PlaylistsPage(MenuPage):
     def page_at(self, index):
         return SinglePlaylistPage(self.playlists[index], self)
 
+class Shutdown(MenuPage):
+    def __init__(self, previous_page):
+        super().__init__("Shutdown", previous_page, has_sub_page=True)
+        self.options = ["No", "Yes"]
+        self.index = 0
+
+    def total_size(self):
+        return len(self.options)
+
+    def page_at(self, index):
+        return None
+
+    def nav_select(self):
+        if self.index == 1:  # User selected "Yes"
+            self.shutdown()
+        return self.previous_page if self.index == 0 else self
+
+    def shutdown(self):
+        print("Shutting down...")
+        # Add your shutdown logic here
+        # For example, if on a Raspberry Pi:
+        # 
+        os.system("sudo shutdown -h now")
+
+    def render(self):
+        lines = []
+        total_size = self.total_size()
+        for i in range(self.page_start, self.page_start + MENU_PAGE_SIZE):
+            if i < total_size:
+                page = self.page_at(i)
+                if page is None:
+                    lines.append(EMPTY_LINE_ITEM)
+                else:
+                    line_type = LINE_TITLE if page.is_title else \
+                        LINE_HIGHLIGHT if i == self.index else LINE_NORMAL
+                    lines.append(LineItem(page.header, line_type, page.has_sub_page))
+            else:
+                lines.append(EMPTY_LINE_ITEM)
+        return MenuRendering(lines=lines, header="Are you sure?", page_start=self.index, total_count=total_size)
+
+
+    def render(self):
+        lines = []
+        Mecnt = 0
+        for i, option in enumerate(self.options):
+            line_type = LINE_HIGHLIGHT if i == self.index else LINE_NORMAL
+            lines.append(LineItem(option, line_type, False))
+            Mecnt += 1
+        while MENU_PAGE_SIZE > Mecnt:
+            lines.append(EMPTY_LINE_ITEM)
+            Mecnt += 1
+        return MenuRendering(lines=lines, header="Are you sure?", page_start=self.index, total_count=self.total_size())
+
+
+'''
+class Shutdown(MenuPage):
+    def __init__(self, previous_page):
+        super().__init__(self.get_title(), previous_page, has_sub_page=True)
+
+    def get_title(self):
+        return "Shutdown?"
+
+    def total_size(self):
+        return 1  # Only one option to navigate to the confirmation page
+
+    def page_at(self, index):
+        return ShutdownConfirmationPage(self.previous_page)
+'''
+
+
 class AlbumsPage(PlaylistsPage):
     def __init__(self, previous_page):
         super().__init__(previous_page)
@@ -511,6 +583,7 @@ class RootPage(MenuPage):
             PlaylistsPage(self),
             ShowsPage(self),
             SearchPage(self),
+            Shutdown(self),
             NowPlayingPage(self, "Now Playing", NowPlayingCommand())
         ]
         self.index = 0

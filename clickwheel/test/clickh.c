@@ -40,7 +40,7 @@ uint8_t recording = 0;
 // indicates whether the data pin is high or low
 uint8_t dataBit = 1;
 uint8_t lastPosition = 255;
-int hapticWaveId = -1;
+//int hapticWaveId = -1;
 
 char buttons[] = { 
     CENTER_BUTTON_BIT, 
@@ -94,11 +94,17 @@ void sendPacket() {
         }
     }
     uint8_t wheelPosition = (bits >> 16) & 0xFF;
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec= 20000000;
     // send haptics every other position. too sensitive otherwise
     if (wheelPosition != lastPosition && wheelPosition % 2 == 0) {
-        if (hapticWaveId != -1) {
-            gpioWaveTxSend(hapticWaveId, PI_WAVE_MODE_ONE_SHOT);
-        }
+        //if (hapticWaveId != -1) {
+        //    gpioWaveTxSend(hapticWaveId, PI_WAVE_MODE_ONE_SHOT);
+        gpioWrite(HAPTIC_PIN, 1);
+        nanosleep(&tim , &tim2);
+        gpioWrite(HAPTIC_PIN, 0);
+        //}
         lastPosition = wheelPosition;
     }
     buffer[WHEEL_POSITION_INDEX] = wheelPosition;
@@ -175,22 +181,22 @@ int main(void *args){
        exit(1);
     }
 
-    // haptic waveform - just a simple on-off pulse
+    // hari here - haptic waveform - just a simple on-off pulse
     gpioSetMode(HAPTIC_PIN, PI_OUTPUT);
-    gpioPulse_t pulse[2];
-    pulse[0].gpioOn = (1<<HAPTIC_PIN);
-    pulse[0].gpioOff = 0;
-    pulse[0].usDelay = 8000;
+    //gpioPulse_t pulse[2];
+    //pulse[0].gpioOn = (1<<HAPTIC_PIN);
+    //pulse[0].gpioOff = 0;
+    //pulse[0].usDelay = 8000;
 
-    pulse[1].gpioOn = 0;
-    pulse[1].gpioOff = (1<<HAPTIC_PIN);
-    pulse[1].usDelay = 2000;
+    //pulse[1].gpioOn = 0;
+    //pulse[1].gpioOff = (1<<HAPTIC_PIN);
+    //pulse[1].usDelay = 2000;
 
-    gpioWaveAddNew();
+    //gpioWaveAddNew();
 
-    gpioWaveAddGeneric(2, pulse);
+    //gpioWaveAddGeneric(2, pulse);
 
-    hapticWaveId = gpioWaveCreate();
+    //hapticWaveId = gpioWaveCreate();
     gpioSetPullUpDown(CLOCK_PIN, PI_PUD_UP);
     gpioSetPullUpDown(DATA_PIN, PI_PUD_UP);
     gpioSetAlertFunc(CLOCK_PIN, onClockEdge);

@@ -1,4 +1,17 @@
+#My Changes
+
+In my version of the spotify ipod. I added a few things such as the ability to shut the device off from the menu's. A headphone jack that most devices miss, haptic feedback, wireless charging, usb-c charging. and a bigger battery.
+
+An issue I encountered was that the clickwheel code uses the pi's PWM to generate a square wave signal to send to the motor to create it's haptic feel. This however is not something that can be manipulated when using the PWM function to output sound to a headphone jack. So I had changed the code to create a momentary runtime per each clickwheel sensed movement. This worked exceptionally well.
+
+I've decided to fork and upload my version in case it's any use to anyone.
+
+This forked version also has a shutdown option in the menu.
+
+
 # sPot
+
+This is a fork of Dupont's repo here: https://github.com/dupontgu/retro-ipod-spotify-client
 
 This code is meant to accompany [this project](https://hackaday.io/project/177034-spot-spotify-in-a-4th-gen-ipod-2004) in which a Spotify client is built into an iPod "Classic" from 2004. Everything is meant to run on a Raspberry Pi Zero W.
 

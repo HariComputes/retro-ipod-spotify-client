@@ -1,26 +1,16 @@
-# Frontend
+# Simple demo for spotipy OAuth workflow
 
-To run: `python3 spotifypod.py`
+Install dependencies with
 
-## Dependencies
+    $ pip install -r requirements.txt
 
-First, you'll need to install the dependencies via `pip3`:
+edit spotipy_oauth_demo.py to enter your Spotify app credentials
 
-```sh
-pip3 install -r requirements.txt
-```
+    SPOTIPY_CLIENT_ID = 'your_client_id'
+    SPOTIPY_CLIENT_SECRET = 'your_client_secret'
 
-For local development on macOS, you need to install redis:
+start server with
 
-```sh
-brew install redis
-```
+    $ python spotipy_oauth_demo.py 
 
-## Authentication
-
-You'll need to authenticate with Spotify to get an access token, which will sit in a file called `.cache`.
-
-To generate the `.cache` file, you need the following enviroment variables: `SPOTIPY_CLIENT_ID`, `SPOTIPY_CLIENT_SECRET` and `SPOTIPY_REDIRECT_URI`.
-More information regarding the authentication flow can be found in **spotipy**'s instructions [here](https://spotipy.readthedocs.io/en/2.16.1/#authorization-code-flow).
-
-And to more information how to get a Spotify `CLIENT_ID`, `CLIENT_SECRET` and to set a `REDIRECT_URI` visit the Spotify Docs section *Register Your App* [here](https://developer.spotify.com/documentation/general/guides/app-settings/).
+open http://localhost:8080 in a browser
