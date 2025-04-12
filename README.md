@@ -1,4 +1,4 @@
-#My Changes
+# My Changes
 
 In my version of the spotify ipod. I added a few things such as the ability to shut the device off from the menu's. A headphone jack that most devices miss, haptic feedback, wireless charging, usb-c charging. and a bigger battery.
 
