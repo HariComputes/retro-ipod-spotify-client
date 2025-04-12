@@ -144,6 +144,8 @@ def get_album(id):
         tracks.append(UserTrack(item['name'], artist, album, item['uri']))
     return (UserAlbum(results['name'], artist, len(tracks), results['uri']), tracks)
 
+
+'''
 def get_playlist_tracks(id):
     tracks = []
     results = sp.playlist_tracks(id, limit=pageSize)
@@ -156,6 +158,36 @@ def get_playlist_tracks(id):
         track = item['track']
         tracks.append(UserTrack(track['name'], track['artists'][0]['name'], track['album']['name'], track['uri']))
     return tracks
+'''
+
+def get_playlist_tracks(playlist_id):
+    tracks = []
+    results = sp.playlist_items(playlist_id)
+    items = results['items']
+    while results['next']:
+        results = sp.next(results)
+        items.extend(results['items'])
+    for item in items:
+        track = item['track']
+        if track:
+            artist_name = None
+            if track.get('artists') and len(track['artists']) > 0 and track['artists'][0].get('name'):
+                artist_name = track['artists'][0]['name']
+
+            album_name = None
+            if track.get('album') and track['album'].get('name'):
+                album_name = track['album']['name']
+
+            track_uri = track.get('uri')
+            track_name = track.get('name')
+
+            if track_name and artist_name and album_name and track_uri:
+                tracks.append(UserTrack(track_name, artist_name, album_name, track_uri))
+            else:
+                print(f"Skipping track due to missing data: {track}")
+    return tracks
+
+
 
 def get_album_tracks(id):
     tracks = []
